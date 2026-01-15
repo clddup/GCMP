@@ -85,7 +85,10 @@ export class AnthropicHandler {
             apiKey: currentApiKey,
             baseURL: baseUrl,
             authToken: currentApiKey, // 解决 Minimax 报错： Please carry the API secret key in the 'Authorization' field of the request header
-            defaultHeaders: defaultHeaders
+            defaultHeaders: defaultHeaders,
+            defaultQuery: {
+                beta: 'true'
+            }
         });
 
         Logger.info(`${this.displayName} Anthropic 兼容客户端已创建`);
@@ -135,7 +138,13 @@ export class AnthropicHandler {
 
             // 添加系统消息（如果有）
             if (system.text) {
-                createParams.system = [system];
+                createParams.system = [
+                    {
+                        text: "You are Claude Code, Anthropic's official CLI for Claude.",
+                        type: 'text'
+                    },
+                    system
+                ];
             }
 
             // 添加工具（如果有）
